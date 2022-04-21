@@ -26,7 +26,6 @@ public class Course implements Serializable {
 
     public Course(String coursename, String lecturetitle) {
         this.coursename = coursename;
-
         this.lecture.add(new Lecture(this, lecturetitle));
 
     }

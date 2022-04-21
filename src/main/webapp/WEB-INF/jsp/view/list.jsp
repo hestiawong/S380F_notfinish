@@ -17,7 +17,7 @@
                     </security:authorize>
                 </h3>
                 <c:forEach items="${course.lecture}" var="lecture">
-                    <li><a href="">${lecture.lecturetitle}</a><security:authorize access="hasRole('LECTURER')">    
+                    <li><a href="<c:url value="/course/${lecture.id}" />">${lecture.lecturetitle}</a><security:authorize access="hasRole('LECTURER')">    
                             [<a href="<c:url value="/course/deletelecture/${lecture.id}" />">Delete</a>]
                         </security:authorize></li>
                     </c:forEach>

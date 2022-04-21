@@ -33,10 +33,15 @@ public class Lecture implements Serializable {
     @JoinColumn(name = "coursename")
     private Course course;
     
-//    @OneToMany(mappedBy = "lecture", fetch = FetchType.EAGER,
-//            cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Fetch(FetchMode.SUBSELECT)
-//    private List<Attachment> attachments = new ArrayList<>();
+    @OneToMany(mappedBy = "lecture", fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Attachment> attachments = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "lecture", fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Comment> comments = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -47,8 +52,7 @@ public class Lecture implements Serializable {
 
     public Lecture(Course course, String lecturetitle) {
         this.course = course;
-        this.lecturetitle = lecturetitle;
-
+        this.lecturetitle = lecturetitle;       
     }
 
     public void setId(int id) {
@@ -79,17 +83,29 @@ public class Lecture implements Serializable {
         this.course = course;
     }
     
-//    public List<Attachment> getAttachments() {
-//        return attachments;
-//    }
-//
-//    public void setAttachments(List<Attachment> attachments) {
-//        this.attachments = attachments;
-//    }
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
 
-//    public void deleteAttachment(Attachment attachment) {
-//        attachment.setTicket(null);
-//        this.attachments.remove(attachment);
-//    }
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+    }
 
+    public void deleteAttachment(Attachment attachment) {
+        attachment.setLecture(null);
+        this.attachments.remove(attachment);
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+    
+    public void deleteComment(Comment comment) {
+        comment.setLecture(null);
+        this.comments.remove(comment);
+    }
 }
