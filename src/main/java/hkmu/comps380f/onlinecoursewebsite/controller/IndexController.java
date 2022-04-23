@@ -87,12 +87,12 @@ public class IndexController {
     }
 
     @GetMapping("/createUser")
-    public ModelAndView createUser() {
+    public ModelAndView toCeateUser() {
         return new ModelAndView("createUser", "WebUser", new Form());
     }
 
     @PostMapping("/createUser")
-    public View create(Form form) throws IOException {
+    public View createUser(Form form) throws IOException {
         WebUser user = new WebUser(form.getUsername(),
                 form.getPassword(), form.getPhone(), form.getFullname(), form.getAddress(), form.getRoles());
         WebUserRepo.save(user);

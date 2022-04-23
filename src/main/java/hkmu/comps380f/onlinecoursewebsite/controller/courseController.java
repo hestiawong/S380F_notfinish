@@ -1,5 +1,6 @@
 package hkmu.comps380f.onlinecoursewebsite.controller;
 
+import hkmu.comps380f.onlinecoursewebsite.dao.CommentRepository;
 import hkmu.comps380f.onlinecoursewebsite.dao.CourseRepository;
 import hkmu.comps380f.onlinecoursewebsite.dao.LectureRepository;
 import hkmu.comps380f.onlinecoursewebsite.exception.AttachmentNotFound;
@@ -9,11 +10,15 @@ import hkmu.comps380f.onlinecoursewebsite.model.Comment;
 import hkmu.comps380f.onlinecoursewebsite.model.Course;
 import hkmu.comps380f.onlinecoursewebsite.model.Lecture;
 import hkmu.comps380f.onlinecoursewebsite.service.AttachmentService;
+import hkmu.comps380f.onlinecoursewebsite.service.CommentService;
 import hkmu.comps380f.onlinecoursewebsite.service.LectureService;
 import hkmu.comps380f.onlinecoursewebsite.view.DownloadingView;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +27,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
@@ -38,11 +42,17 @@ public class courseController {
     @Autowired
     private AttachmentService attachmentService;
 
+    @Autowired
+    private CommentService commentService;
+
     @Resource
     CourseRepository courseRepo;
 
     @Resource
     LectureRepository lectureRepo;
+
+    @Resource
+    CommentRepository commentRepository;
 
     @GetMapping({"", "/list"})
     public String list(ModelMap model) {
@@ -90,7 +100,7 @@ public class courseController {
     }
 
     @GetMapping("/{id}")
-    public ModelAndView getLecturePage(ModelMap model, @PathVariable("id") Long id) {
+    public ModelAndView toLecturePage(ModelMap model, @PathVariable("id") Long id) {
         Lecture lecture = lectureRepo.findById(id).orElse(null);
         ModelAndView modelAndView = new ModelAndView("lecturePage");
         modelAndView.addObject("lecture", lecture);
@@ -101,17 +111,16 @@ public class courseController {
     }
 
     @PostMapping("/{id}")
-    public String edit(@PathVariable("id") long id, Form form)
+    public String addAttachment(@PathVariable("id") long id, Form form)
             throws IOException, LectureNotFound {
         lectureService.updateLecture(id, form.getAttachments());
         return "redirect:/course/" + id;
     }
 
-
-    @PostMapping("/comment/{id}")
-    public String comment(@PathVariable("id") long id, Form form, Principal principal)
-            throws IOException, LectureNotFound {
-        lectureService.addComment(id, form.getComment(), principal.getName());
+    @GetMapping("/{id}/delete/attachment/{attachment:.+}")
+    public String deleteAttachment(@PathVariable("id") long id,
+            @PathVariable("attachment") String name) throws AttachmentNotFound {
+        lectureService.deleteAttachment(id, name);
         return "redirect:/course/" + id;
     }
 
@@ -127,10 +136,10 @@ public class courseController {
         return new RedirectView("/{id}", true);
     }
 
-    @GetMapping("/{id}/delete/attachment/{attachment:.+}")
-    public String deleteAttachment(@PathVariable("id") long id,
-            @PathVariable("attachment") String name) throws AttachmentNotFound {
-        lectureService.deleteAttachment(id, name);
+    @PostMapping("/comment/{id}")
+    public String comment(@PathVariable("id") long id, Form form, Principal principal)
+            throws IOException, LectureNotFound {
+        lectureService.addComment(id, form.getComment(), principal.getName());
         return "redirect:/course/" + id;
     }
 
@@ -139,6 +148,26 @@ public class courseController {
             @PathVariable("commentId") long commentId) {
         lectureService.deleteComment(id, commentId);
         return "redirect:/course/" + id;
+    }
+
+    @GetMapping("/comment/history")
+    public ModelAndView toCommentHistory(Principal principal) {
+
+        List<Comment> comments = commentService.findUserComment(principal.getName());
+        Set<Long> set = new HashSet<>();
+        for (Comment comment : comments) {
+            set.add(comment.getLecture_id());
+        }
+        List<Lecture> lectures = new ArrayList<>();
+        for(Long id : set){
+        lectures.add(lectureRepo.findById(id).orElse(null));
+        }
+        List<Course> courses = courseRepo.findAll();
+        ModelAndView modelAndView = new ModelAndView("commentHistory");
+        modelAndView.addObject("lectures", lectures);
+        modelAndView.addObject("comments",comments);
+        modelAndView.addObject("courses",courses);
+        return modelAndView;
     }
 
     public static class Form {
