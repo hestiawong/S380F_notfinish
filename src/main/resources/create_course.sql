@@ -44,5 +44,3 @@ CREATE TABLE pollanswer(
     PRIMARY KEY (id),
     FOREIGN KEY (question_id) REFERENCES pollquestion(question_id)
 );
-
--- INSERT INTO pollquestion(question) VALUES('What is your name?'); 

@@ -66,8 +66,24 @@ public class courseController {
     @GetMapping({"", "/list"})
     public String list(ModelMap model) {
         model.addAttribute("course", courseRepo.findAll());
+        model.addAttribute("poll",pollquestionRepo.findAll());
+        Poll poll = new Poll();
+        model.addAttribute("p", poll);
         return "list";
     }
+    
+    public static class Poll{
+        private String answer;
+
+        public String getAnswer() {
+            return answer;
+        }
+
+        public void setAnswer(String answer) {
+            this.answer = answer;
+        }
+        
+    };
 
     @GetMapping("/visitor")
     public String visitorlist(ModelMap model) {
@@ -202,6 +218,8 @@ public class courseController {
        
         return "redirect:/course/";
     }
+    
+    
     
 
 

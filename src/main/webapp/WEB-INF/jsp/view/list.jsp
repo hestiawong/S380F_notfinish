@@ -27,16 +27,23 @@
 
             </ul>
         </c:forEach>
+        <c:choose>
+            <c:when test="${fn:length(poll) == 0}">    
+            </c:when>
+            <c:otherwise>
+                <c:forEach items="${poll}" var="pol">
+                    <form:form method="POST" enctype="multipart/form-data" modelAttribute="p">
+                        ${pol.question}<br/>
+                        <c:forEach items="${pol.pollAnswer}" var="ans">
+                            <form:radiobutton path="answer" value="${ans.pollAnswer}" /> ${ans.pollAnswer} <br />                         
+                        </c:forEach>
+                        <input type="submit" value="Add"/>
 
-        <form:form method="POST" enctype="multipart/form-data" modelAttribute="WebUser">
-            <form:label path="username">Username :</form:label><br/>
-            <form:radiobuttons path="abc" items="${xyz}"/>
-            <form:radiobuttons path="abc" items="${xyz}"/>
-            <form:radiobuttons path="abc" items="${xyz}"/>
-            <form:radiobuttons path="abc" items="${xyz}"/>
-            <br /><br />
-            <input type="submit" value="Create"/>
-        </form:form>
+                    </form:form>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
+
 
         <c:url var="logoutUrl" value="/logout"/>
         <form action="${logoutUrl}" method="post">

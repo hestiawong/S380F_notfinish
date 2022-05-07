@@ -10,5 +10,5 @@ CREATE TABLE users (
 
 
 INSERT INTO users VALUES ('keith', '{noop}keithpw','keithlee','12345678','HKMU','ROLE_LECTURER');
-INSERT INTO users VALUES ('john', '{noop}johnpw','johnchan','12345678','HKMU','ROLE_LECTURER');
+INSERT INTO users VALUES ('john', '{noop}johnpw','johnchan','12345678','HKMU','ROLE_STUDENT');
 
