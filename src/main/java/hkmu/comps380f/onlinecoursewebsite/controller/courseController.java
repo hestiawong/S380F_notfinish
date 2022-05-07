@@ -3,12 +3,15 @@ package hkmu.comps380f.onlinecoursewebsite.controller;
 import hkmu.comps380f.onlinecoursewebsite.dao.CommentRepository;
 import hkmu.comps380f.onlinecoursewebsite.dao.CourseRepository;
 import hkmu.comps380f.onlinecoursewebsite.dao.LectureRepository;
+import hkmu.comps380f.onlinecoursewebsite.dao.PollAnswerRepository;
+import hkmu.comps380f.onlinecoursewebsite.dao.PollQuestionRepository;
 import hkmu.comps380f.onlinecoursewebsite.exception.AttachmentNotFound;
 import hkmu.comps380f.onlinecoursewebsite.exception.LectureNotFound;
 import hkmu.comps380f.onlinecoursewebsite.model.Attachment;
 import hkmu.comps380f.onlinecoursewebsite.model.Comment;
 import hkmu.comps380f.onlinecoursewebsite.model.Course;
 import hkmu.comps380f.onlinecoursewebsite.model.Lecture;
+import hkmu.comps380f.onlinecoursewebsite.model.PollQuestion;
 import hkmu.comps380f.onlinecoursewebsite.service.AttachmentService;
 import hkmu.comps380f.onlinecoursewebsite.service.CommentService;
 import hkmu.comps380f.onlinecoursewebsite.service.LectureService;
@@ -53,6 +56,12 @@ public class courseController {
 
     @Resource
     CommentRepository commentRepository;
+    
+    @Resource
+    PollAnswerRepository pollAnswerRepo;
+    
+    @Resource
+    PollQuestionRepository pollquestionRepo;
 
     @GetMapping({"", "/list"})
     public String list(ModelMap model) {
@@ -159,15 +168,91 @@ public class courseController {
             set.add(comment.getLecture_id());
         }
         List<Lecture> lectures = new ArrayList<>();
-        for(Long id : set){
-        lectures.add(lectureRepo.findById(id).orElse(null));
+        for (Long id : set) {
+            lectures.add(lectureRepo.findById(id).orElse(null));
         }
         List<Course> courses = courseRepo.findAll();
         ModelAndView modelAndView = new ModelAndView("commentHistory");
         modelAndView.addObject("lectures", lectures);
-        modelAndView.addObject("comments",comments);
-        modelAndView.addObject("courses",courses);
+        modelAndView.addObject("comments", comments);
+        modelAndView.addObject("courses", courses);
         return modelAndView;
+    }
+
+    @GetMapping("/addPoll")
+    public ModelAndView toPollPage(ModelMap model) {
+        ModelAndView modelAndView = new ModelAndView("addPoll");
+        PollForm pollForm = new PollForm();
+        modelAndView.addObject("addPoll", pollForm);
+        return modelAndView;
+    };
+    
+    @PostMapping("/addPoll")
+    public String addPoll(PollForm pollForm)
+            throws IOException, LectureNotFound {
+        
+        String[] pollAnswer = new String[4];
+        pollAnswer[0] = pollForm.getAnswer0();
+        pollAnswer[1] = pollForm.getAnswer1();
+        pollAnswer[2] = pollForm.getAnswer2();
+        pollAnswer[3] = pollForm.getAnswer3();
+        
+        PollQuestion pollQuestion = new PollQuestion(pollForm.getQuestion(), pollAnswer);
+        pollquestionRepo.save(pollQuestion);
+       
+        return "redirect:/course/";
+    }
+    
+
+
+    public static class PollForm {
+
+        private String question;
+        private String answer0;
+        private String answer1;
+        private String answer2;
+        private String answer3;
+
+        public String getQuestion() {
+            return question;
+        }
+
+        public void setQuestion(String question) {
+            this.question = question;
+        }
+
+        public String getAnswer0() {
+            return answer0;
+        }
+
+        public void setAnswer0(String answer0) {
+            this.answer0 = answer0;
+        }
+
+        public String getAnswer1() {
+            return answer1;
+        }
+
+        public void setAnswer1(String answer1) {
+            this.answer1 = answer1;
+        }
+
+        public String getAnswer2() {
+            return answer2;
+        }
+
+        public void setAnswer2(String answer2) {
+            this.answer2 = answer2;
+        }
+
+        public String getAnswer3() {
+            return answer3;
+        }
+
+        public void setAnswer3(String answer3) {
+            this.answer3 = answer3;
+        }
+
     }
 
     public static class Form {

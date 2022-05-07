@@ -9,6 +9,9 @@
             [<a href="<c:url value="/course/createcourse" />">Create Course</a>]
         </security:authorize>[<a href="<c:url value = "/course/comment/history"/>">Comment History</a>]
         <br/><br/>
+
+        [<a href="<c:url value = "/course/addPoll"/>">Add Poll</a>]
+        <br/><br/>
         <c:forEach items="${course}" var="course">
             <ul>
                 <h3>${course.coursename} 
@@ -24,6 +27,17 @@
 
             </ul>
         </c:forEach>
+
+        <form:form method="POST" enctype="multipart/form-data" modelAttribute="WebUser">
+            <form:label path="username">Username :</form:label><br/>
+            <form:radiobuttons path="abc" items="${xyz}"/>
+            <form:radiobuttons path="abc" items="${xyz}"/>
+            <form:radiobuttons path="abc" items="${xyz}"/>
+            <form:radiobuttons path="abc" items="${xyz}"/>
+            <br /><br />
+            <input type="submit" value="Create"/>
+        </form:form>
+
         <c:url var="logoutUrl" value="/logout"/>
         <form action="${logoutUrl}" method="post">
             <input type="submit" value="Log out" />
