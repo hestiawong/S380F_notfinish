@@ -5,6 +5,7 @@ import hkmu.comps380f.onlinecoursewebsite.dao.CourseRepository;
 import hkmu.comps380f.onlinecoursewebsite.dao.LectureRepository;
 import hkmu.comps380f.onlinecoursewebsite.dao.PollAnswerRepository;
 import hkmu.comps380f.onlinecoursewebsite.dao.PollQuestionRepository;
+import hkmu.comps380f.onlinecoursewebsite.dao.PollResponeRepository;
 import hkmu.comps380f.onlinecoursewebsite.exception.AttachmentNotFound;
 import hkmu.comps380f.onlinecoursewebsite.exception.LectureNotFound;
 import hkmu.comps380f.onlinecoursewebsite.model.Attachment;
@@ -12,6 +13,7 @@ import hkmu.comps380f.onlinecoursewebsite.model.Comment;
 import hkmu.comps380f.onlinecoursewebsite.model.Course;
 import hkmu.comps380f.onlinecoursewebsite.model.Lecture;
 import hkmu.comps380f.onlinecoursewebsite.model.PollQuestion;
+import hkmu.comps380f.onlinecoursewebsite.model.PollRespone;
 import hkmu.comps380f.onlinecoursewebsite.service.AttachmentService;
 import hkmu.comps380f.onlinecoursewebsite.service.CommentService;
 import hkmu.comps380f.onlinecoursewebsite.service.LectureService;
@@ -62,6 +64,9 @@ public class courseController {
     
     @Resource
     PollQuestionRepository pollquestionRepo;
+    
+    @Resource
+    PollResponeRepository pollResponeRepo;
 
     @GetMapping({"", "/list"})
     public String list(ModelMap model) {
@@ -72,16 +77,36 @@ public class courseController {
         return "list";
     }
     
+    
+    @PostMapping("/vote")
+    public String vote(Poll form,Principal principal) throws IOException {
+        PollRespone pollRespone = new PollRespone(form.getQuestion_id(),form.getAnswer(),principal.getName()); 
+        pollResponeRepo.save(pollRespone);
+        return "redirect:/course";
+    }
+    
+    
+    
     public static class Poll{
-        private String answer;
+        private int answer;
+        private int question_id;
 
-        public String getAnswer() {
+        public int getAnswer() {
             return answer;
         }
 
-        public void setAnswer(String answer) {
+        public void setAnswer(int answer) {
             this.answer = answer;
         }
+
+        public int getQuestion_id() {
+            return question_id;
+        }
+
+        public void setQuestion_id(int question_id) {
+            this.question_id = question_id;
+        }
+
         
     };
 

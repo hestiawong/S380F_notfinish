@@ -44,3 +44,11 @@ CREATE TABLE pollanswer(
     PRIMARY KEY (id),
     FOREIGN KEY (question_id) REFERENCES pollquestion(question_id)
 );
+
+ CREATE TABLE pollrespone(
+    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    question_id INTEGER,
+    answer_id INTEGER,
+    username VARCHAR(255),
+    PRIMARY KEY (id)
+);
