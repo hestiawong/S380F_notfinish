@@ -12,7 +12,7 @@ import javax.persistence.Table;
 public class PollRespone implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int respone_id;
+    private int id;
     
     private int question_id;
     
@@ -28,13 +28,15 @@ public class PollRespone implements Serializable {
      this.username = username;
      };
 
-    public int getRespone_id() {
-        return respone_id;
+    public int getId() {
+        return id;
     }
 
-    public void setRespone_id(int respone_id) {
-        this.respone_id = respone_id;
+    public void setId(int id) {
+        this.id = id;
     }
+
+    
 
     public int getQuestion_id() {
         return question_id;

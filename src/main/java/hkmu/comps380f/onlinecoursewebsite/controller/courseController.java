@@ -78,7 +78,7 @@ public class courseController {
     }
     
     
-    @PostMapping("/vote")
+    @PostMapping("")
     public String vote(Poll form,Principal principal) throws IOException {
         PollRespone pollRespone = new PollRespone(form.getQuestion_id(),form.getAnswer(),principal.getName()); 
         pollResponeRepo.save(pollRespone);

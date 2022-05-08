@@ -33,7 +33,7 @@
             </c:when>
             <c:otherwise>
                 <c:forEach items="${poll}" var="pol">
-                    <form:form method="POST" action="vote" enctype="multipart/form-data" modelAttribute="p">
+                    <form:form method="POST" enctype="multipart/form-data" modelAttribute="p">
                         ${pol.question}<br/>
                         <c:forEach items="${pol.pollAnswer}" var="ans">
                             <form:radiobutton path="answer" value="${ans.answerId}" /> ${ans.pollAnswer} <br />
