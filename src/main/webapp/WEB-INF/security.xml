@@ -29,6 +29,7 @@
         <intercept-url pattern="/course/visitor" access="permitAll" />
         <intercept-url pattern="/userlist/**" access="hasAnyRole('LECTURER')" />
         <intercept-url pattern="/course/**" access="hasAnyRole('LECTURER','STUDENT')" />
+        <intercept-url pattern="/pollContentPage/**" access="hasAnyRole('LECTURER','STUDENT')" />
         <form-login login-page="/login" login-processing-url="/login"
                     authentication-failure-url="/login?error" />
         <logout logout-url="/logout" logout-success-url="/login?logout"

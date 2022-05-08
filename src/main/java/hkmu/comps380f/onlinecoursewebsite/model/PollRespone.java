@@ -1,11 +1,16 @@
 package hkmu.comps380f.onlinecoursewebsite.model;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "pollrespone")
@@ -20,6 +25,7 @@ public class PollRespone implements Serializable {
     
     private String username;
     
+
     public PollRespone(){};
     
      public PollRespone(int question_id,int answer_id,String username){

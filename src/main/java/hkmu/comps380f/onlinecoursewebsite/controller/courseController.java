@@ -71,9 +71,9 @@ public class courseController {
     @GetMapping({"", "/list"})
     public String list(ModelMap model) {
         model.addAttribute("course", courseRepo.findAll());
-        model.addAttribute("poll",pollquestionRepo.findAll());
-        Poll poll = new Poll();
-        model.addAttribute("p", poll);
+        //model.addAttribute("poll",pollquestionRepo.findAll());
+        //Poll poll = new Poll();
+        //model.addAttribute("p", poll);
         return "list";
     }
     
@@ -220,7 +220,23 @@ public class courseController {
         return modelAndView;
     }
 
-    @GetMapping("/addPoll")
+        @GetMapping("/pollContentPage")
+    public ModelAndView toPollContentPage(ModelMap model) {
+        ModelAndView modelAndView = new ModelAndView("pollContentPage");
+        courseController.PollForm pollForm = new courseController.PollForm();
+        modelAndView.addObject("pollContentPage", pollForm);
+        return modelAndView;
+    };
+    
+    @GetMapping({"/pollContentPage"})
+    public String pollList(ModelMap model) {
+        model.addAttribute("poll",pollquestionRepo.findAll());
+        Poll poll = new Poll();
+        model.addAttribute("p", poll);
+        return "pollContentPage";
+    }
+    
+    @GetMapping("/pollContentPage/addPoll")
     public ModelAndView toPollPage(ModelMap model) {
         ModelAndView modelAndView = new ModelAndView("addPoll");
         PollForm pollForm = new PollForm();
@@ -228,7 +244,7 @@ public class courseController {
         return modelAndView;
     };
     
-    @PostMapping("/addPoll")
+    @PostMapping("/pollContentPage/addPoll")
     public String addPoll(PollForm pollForm)
             throws IOException, LectureNotFound {
         
@@ -241,7 +257,7 @@ public class courseController {
         PollQuestion pollQuestion = new PollQuestion(pollForm.getQuestion(), pollAnswer);
         pollquestionRepo.save(pollQuestion);
        
-        return "redirect:/course/";
+        return "redirect:/course/pollContentPage";
     }
     
     
